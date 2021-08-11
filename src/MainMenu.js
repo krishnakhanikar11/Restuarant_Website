@@ -1,7 +1,20 @@
 import React,{useState} from 'react'
 import Menu1 from './components/MenuApi'
 import Menu from './components/Menu'
+import NavBar from './components/NavBar'
 
+
+
+
+const uniqueList = [
+    ...new Set(
+      Menu1.map((curElem) => {
+        return curElem.category;
+      })
+    ),
+    "All",
+  ];
+  
 
 const MainMenu = () => {
     
@@ -9,32 +22,27 @@ const MainMenu = () => {
     //setting the data as hooks which can be later filtered 
     const [menuData ,setMenuData] = useState(Menu1)
 
+    const [menuList, setMenuList] = useState(uniqueList);
+
 
     const filterItem = (category1) => {
+        if (category1 === "All"){
+            setMenuData(Menu1)
+        }
+        else{
         const updateList = Menu1.filter((item) => {
             return item.category === category1
         }
         )
-        setMenuData(updateList)
+        setMenuData(updateList)}
 
     };
 
-    const showItem = () => {
-        setMenuData(Menu1)
-    }
-
-    
     return (
         <div className='flex flex-col items-center justify-center'>
-        <nav className='p-5 '>
-            <div className=' bg-yellow-50 rounded-3xl  p-5 w-96 flex justify-center justify-content-center items-center'>
-                <button className='p-3 bg-white hover:bg-red-300 hover:text-white border-b-4 border-red-600' onClick={() => filterItem('breakfast')}>Breakfast</button>
-                <button className='p-3 bg-white hover:bg-red-300 hover:text-white border-b-4 border-red-600' onClick={() => filterItem('lunch')}>Lunch</button>
-                <button className='p-3 bg-white hover:bg-red-300 hover:text-white border-b-4 border-red-600' onClick={() => filterItem('dinner')}>Dinner</button>
-                <button className='p-3 bg-white hover:bg-red-300 hover:text-white border-b-4 border-red-600' onClick={showItem}>All</button>
-
-            </div>
-        </nav>
+        
+           <NavBar filterItem={filterItem} menuList={menuList} />
+        
         <div className='h-full p-32'>
             <div className='grid grid-cols-3 grid-rows-auto gap-4'>
                 {menuData.map((item) => (
